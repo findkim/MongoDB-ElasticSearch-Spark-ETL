@@ -23,7 +23,7 @@ object mongodb_es_etl {
 		val mongoRDD = sc.newAPIHadoopRDD(config, classOf[com.mongodb.hadoop.MongoInputFormat], classOf[Object], classOf[BSONObject])
 
 		// Convert BSON to JSON
-		val jsonStringRDD = mongoRDD.map(x => x._2)	// Array[(Object, org.bson.BSONObject)] --> Array[org.bson.BSONObject] --> org.apache.spark.rdd.RDD[String]
+		val jsonStringRDD = mongoRDD.map(x => x._2.toString())	// Array[(Object, org.bson.BSONObject)] --> Array[org.bson.BSONObject] --> org.apache.spark.rdd.RDD[String]
 		val jsonRDD = sqlContext.jsonRDD(jsonStringRDD)	// org.apache.spark.rdd.RDD[String] --> org.apache.spark.sql.DataFrame
 		val jsonRDD_mod = jsonRDD.withColumnRenamed("_id", "mongoDB_id")	// modify Mongo column name to avoid conflict with ES
 
